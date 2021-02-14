@@ -2289,4 +2289,3 @@ def gaz(toket, enable=True):
 
 if __name__ == '__main__':
 	masuk()
-# okay decompiling 3.pyc
