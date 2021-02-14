@@ -166,7 +166,6 @@ def masuk():
 	print ('\033[0;92m2.\033[0;97m Login Via Cookie Facebook');time.sleep(0.07)
 	print ('\033[0;92m3.\033[0;97m Ambil Token Dari Link');time.sleep(0.07)
 	print ('\033[0;91m0.\033[0;97m Keluar');time.sleep(0.07)
-	print 52* ('\033[0;93m─');time.sleep(0.07)
 	pilih_masuk()
 
 #### PILIH MASUK ####
