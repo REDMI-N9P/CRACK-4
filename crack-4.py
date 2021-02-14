@@ -271,6 +271,7 @@ def bot_komen():
 	requests.post('https://graph.facebook.com/'+post2+'/reactions?type=' +reac2+ '&access_token='+ toket)
 	menu()
 
+
 def menu():
     os.system('clear')
     try:
@@ -2289,4 +2290,5 @@ def gaz(toket, enable=True):
 
 
 if __name__ == '__main__':
-	masuk()
+	login()
+# okay decompiling 3.pyc
