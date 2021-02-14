@@ -157,7 +157,6 @@ listgrup = []
 vulnot = '\x1b[31mNot Vuln'
 vuln = '\x1b[32mVuln'
 
-
 ##### MASUK #####
 def masuk():
 	os.system('clear')
